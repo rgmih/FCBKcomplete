@@ -80,7 +80,7 @@
           temp_elem.data('cache')[option.val()] =  option.text();
           if (option.hasClass("selected")) {
             var id = addItem(option.text(), option.val(), true, option.hasClass("locked"));
-            temp_elem.append('<option value="'+option.val()+'" selected="selected" id="opt_'+id+'"class="selected">'+option.text()+'</option>');
+            temp_elem.append($('<option selected="selected" id="opt_'+id+'"class="selected"></option>').attr("value", option.val()).text(option.text()));
           }
         });
         
@@ -140,7 +140,8 @@
         if (!preadded) {
           $("#" + elemid + "_annoninput").remove();
           addInput(focusme);
-          var _item = $('<option value="'+xssDisplay(value, 1)+'" id="opt_'+id+'" class="selected" selected="selected">'+xssDisplay(title)+'</option>');
+          
+          var _item = $('<option id="opt_'+id+'" class="selected" selected="selected">'+xssDisplay(title)+'</option>').attr("value", xssDisplay(value, 1));
           element.append(_item);
           if (options.onselect) {
             funCall(options.onselect, _item);
@@ -196,6 +197,7 @@
         });
         
         holder.click( function() {
+          complete.width(holder.width() + 12); // HACK: always set width equal to holder width
           if (options.input_min_size < 0 && feed.length) {
             load_feed(xssPrevent(input.val(), 1));
           }
@@ -348,13 +350,13 @@
             holder.children("li.bit-box.deleted").removeClass("deleted");
           }
 
-          if ((event.keyCode == _key.enter || event.keyCode == _key.tab || event.keyCode == _key.comma) && checkFocusOn()) {
+          if ((event.keyCode == _key.enter || event.keyCode == _key.tab || (event.keyCode == _key.comma && options.addoncomma)) && checkFocusOn()) {
             var option = focuson;
             addItem(option.text(), option.attr("rel"), 0, 0, 1);
             return _preventDefault(event);
           }
 
-          if ((event.keyCode == _key.enter || event.keyCode == _key.tab || event.keyCode == _key.comma) && !checkFocusOn()) {
+          if ((event.keyCode == _key.enter || event.keyCode == _key.tab || (event.keyCode == _key.comma && options.addoncomma)) && !checkFocusOn()) {
             if (options.newel) {
               var value = xssPrevent($(this).val());
               addItem(value, value, 0, 0, 1);
